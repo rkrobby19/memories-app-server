@@ -14,6 +14,9 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+import postRoutes from "./routes/posts.js";
+app.use("/api", postRoutes);
+
 const URI = process.env.MONGO_URI;
 const PORT = process.env.PORT || 8000;
 
