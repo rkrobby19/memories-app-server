@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 
 const app = express();
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use(cors());
 
 app.get("/", (req, res) => {
