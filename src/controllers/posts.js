@@ -67,6 +67,30 @@ export const updatePostById = async (req, res) => {
   }
 };
 
+export const likePostById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const post = await Post.findById(id);
+
+    if (post == null) {
+      return res.status(404).send({ message: `Post with id:${id} not found` });
+    }
+
+    const likePost = await Post.findByIdAndUpdate(
+      id,
+      {
+        likeCount: post.likeCount + 1,
+      },
+      { returnDocument: "after" }
+    );
+
+    res.send({ likePost });
+  } catch (error) {
+    res.send({ status: error.name, message: error.message });
+  }
+};
+
 export const deletePostById = async (req, res) => {
   try {
     const { id } = req.params;
