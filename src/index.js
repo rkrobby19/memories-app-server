@@ -15,7 +15,10 @@ app.get("/", (req, res) => {
 });
 
 import postRoutes from "./routes/posts.js";
+import userRoutes from "./routes/user.js";
+
 app.use("/api", postRoutes);
+app.use("/api/users", userRoutes);
 
 const URI = process.env.MONGO_URI;
 const PORT = process.env.PORT || 8000;
