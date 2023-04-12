@@ -14,7 +14,7 @@ export const addPost = async (req, res) => {
 
     await newPost.save();
 
-    res.status(201).send({ newPost });
+    res.status(201).send({ post: newPost });
   } catch (error) {
     res.status(409).send({ status: error.name, message: error.message });
   }
@@ -71,21 +71,27 @@ export const likePostById = async (req, res) => {
   try {
     const { id } = req.params;
 
+    if (!req.user) {
+      return res.json({ message: "Unauthenticated" });
+    }
+
     const post = await Post.findById(id);
 
     if (post == null) {
       return res.status(404).send({ message: `Post with id:${id} not found` });
     }
 
-    const likePost = await Post.findByIdAndUpdate(
-      id,
-      {
-        likeCount: post.likeCount + 1,
-      },
-      { returnDocument: "after" }
-    );
+    const index = post.likes.findIndex((id) => id === String(req.user.id));
 
-    res.send({ likePost });
+    if (index === -1) {
+      post.likes.push(req.user.id);
+    } else {
+      post.likes = post.likes.filter((id) => id !== String(req.user.id));
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(id, post, { new: true });
+
+    res.send({ post: updatedPost });
   } catch (error) {
     res.send({ status: error.name, message: error.message });
   }

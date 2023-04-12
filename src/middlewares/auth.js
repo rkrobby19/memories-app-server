@@ -19,7 +19,7 @@ const auth = async (req, res, next) => {
     } else {
       decodedToken = jwt.decode(token);
 
-      req.user = decodedToken;
+      req.user = { id: decodedToken.sub, email: decodedToken.email };
     }
 
     return next();
