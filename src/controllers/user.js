@@ -22,6 +22,7 @@ export const userSignUp = async (req, res) => {
     });
 
     const payload = {
+      id: user._id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
@@ -56,6 +57,7 @@ export const userSignIn = async (req, res) => {
     }
 
     const payload = {
+      id: user._id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,

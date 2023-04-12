@@ -16,9 +16,11 @@ app.get("/", (req, res) => {
 
 import postRoutes from "./routes/posts.js";
 import userRoutes from "./routes/user.js";
+import googleRoutes from "./routes/google.js";
 
 app.use("/api", postRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/auth", googleRoutes);
 
 const URI = process.env.MONGO_URI;
 const PORT = process.env.PORT || 8000;
