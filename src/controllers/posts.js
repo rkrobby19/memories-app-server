@@ -2,14 +2,13 @@ import Post from "../models/post.js";
 
 export const addPost = async (req, res) => {
   try {
-    const { title, message, selectedFile, creator, tags } = req.body;
+    const user = req.user;
+    const data = req.body;
 
     const newPost = new Post({
-      title,
-      message,
-      selectedFile,
-      creator,
-      tags,
+      ...data,
+      creator: user.id,
+      name: `${user.firstName} ${user.lastName}`,
     });
 
     await newPost.save();
@@ -51,7 +50,9 @@ export const updatePostById = async (req, res) => {
 
     const { title, message, selectedFile, creator, tags } = req.body;
 
-    const updatePost = { title, message, selectedFile, creator, tags };
+    const tag = tags.split(",");
+
+    const updatePost = { title, message, selectedFile, creator, tags: tag };
 
     const post = await Post.findByIdAndUpdate(id, updatePost, {
       returnDocument: "after",
