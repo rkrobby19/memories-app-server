@@ -28,6 +28,22 @@ export const getPosts = async (req, res) => {
   }
 };
 
+export const getPostsBySearch = async (req, res) => {
+  try {
+    const { q, tags } = req.query;
+
+    const title = new RegExp(q, "i");
+
+    const posts = await Post.find({
+      $or: [{ title }, { tags: { $in: tags.split(",") } }],
+    });
+
+    res.status(200).send({ posts });
+  } catch (error) {
+    res.status(404).send({ status: error.name, message: error.message });
+  }
+};
+
 export const getPostById = async (req, res) => {
   try {
     const { id } = req.params;
