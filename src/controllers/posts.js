@@ -22,19 +22,23 @@ export const addPost = async (req, res) => {
 export const getPosts = async (req, res) => {
   try {
     const { pages } = req.query;
-    const LIMIT = 4;
-    const startIndex = (Number(pages) - 1) * LIMIT;
-    const TOTAL = await Post.countDocuments({});
+    let posts;
+    if (pages) {
+      const LIMIT = 4;
+      const startIndex = (Number(pages) - 1) * LIMIT;
+      const TOTAL = await Post.countDocuments({});
 
-    const posts = await Post.find()
-      .sort({ _id: -1 })
-      .limit(LIMIT)
-      .skip(startIndex);
-    res.status(200).send({
-      posts,
-      currentPage: Number(pages),
-      numberOfPages: Math.ceil(TOTAL / LIMIT),
-    });
+      posts = await Post.find().sort({ _id: -1 }).limit(LIMIT).skip(startIndex);
+      return res.status(200).send({
+        posts,
+        currentPage: Number(pages),
+        numberOfPages: Math.ceil(TOTAL / LIMIT),
+      });
+    }
+
+    posts = await Post.find();
+
+    return res.send({ posts });
   } catch (error) {
     res.status(404).send({ status: error.name, message: error.message });
   }
