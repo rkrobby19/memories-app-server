@@ -130,6 +130,25 @@ export const likePostById = async (req, res) => {
   }
 };
 
+export const commentPostById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+
+    data.createdAt = new Date();
+
+    const post = await Post.findById(id);
+
+    post.comments.push(data);
+
+    const updatePost = await Post.findByIdAndUpdate(id, post, { new: true });
+
+    return res.send({ post: updatePost });
+  } catch (error) {
+    res.send({ status: error.name, message: error.message });
+  }
+};
+
 export const deletePostById = async (req, res) => {
   try {
     const { id } = req.params;

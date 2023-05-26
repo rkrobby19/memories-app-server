@@ -7,12 +7,14 @@ import {
   getPostsBySearch,
   updatePostById,
   likePostById,
+  commentPostById,
 } from "../controllers/posts.js";
 import auth from "../middlewares/auth.js";
 
 const router = express.Router();
 
 router.post("/posts", [auth], addPost);
+router.post("/posts/:id/commentPost", commentPostById);
 router.get("/posts", getPosts);
 router.get("/posts/search", getPostsBySearch);
 router.get("/posts/:id", getPostById);
