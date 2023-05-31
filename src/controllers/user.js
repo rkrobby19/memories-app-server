@@ -8,7 +8,7 @@ export const userSignUp = async (req, res) => {
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.send({ message: `User already exist.` });
+      return res.status(409).send({ message: `User already exist.` });
     }
 
     const salt = bcrypt.genSaltSync(10);
@@ -37,9 +37,9 @@ export const userSignUp = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    return res.send({ user, token });
+    return res.status(201).send({ user, token });
   } catch (error) {
-    return res.send({ status: error.name, message: error.message });
+    return res.status(500).send({ status: error.name, message: error.message });
   }
 };
 
@@ -49,11 +49,11 @@ export const userSignIn = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.send({ message: `User doesn't exist` });
+      return res.status(409).send({ message: `User doesn't exist` });
     }
     const isPasswordCorrect = bcrypt.compareSync(password, user.password);
     if (!isPasswordCorrect) {
-      return res.send({ message: `Wrong Password` });
+      return res.status(401).send({ message: `Wrong Password` });
     }
 
     const payload = {
@@ -72,9 +72,9 @@ export const userSignIn = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    return res.send({ user, token });
+    return res.status(200).send({ user, token });
   } catch (error) {
-    return res.send({ status: error.name, message: error.message });
+    return res.status(500).send({ status: error.name, message: error.message });
   }
 };
 
